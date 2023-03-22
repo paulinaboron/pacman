@@ -14,7 +14,8 @@ export class MapItem implements SquareMap {
       this.canvas.width = 25;
       this.canvas.height = 25;
       this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-      this.canvas.addEventListener("click", () => this.click(this.canvas));
+      this.canvas.addEventListener("mousedown", () => this.click(this.canvas));
+      this.canvas.addEventListener("mouseup", ()=>this.unClick(this.canvas));
     }
   
     click(canvas: HTMLCanvasElement): void {
@@ -39,6 +40,12 @@ export class MapItem implements SquareMap {
         canvas.style.borderColor = "red";
       }
       console.log(this.x, this.y, ctrlPressed);
+    }
+
+    unClick(canvas: HTMLCanvasElement): void{
+      canvas.style.borderColor = "red"
+      console.log("unclick");
+      
     }
   
     setBgImage(img: ImageData): void {

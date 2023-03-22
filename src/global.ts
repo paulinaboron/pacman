@@ -7,6 +7,7 @@ const items: HTMLDivElement = document.getElementById("items") as HTMLDivElement
 const autoCheckbox: HTMLInputElement = document.getElementById(
   "automat"
 ) as HTMLInputElement;
+const selectionDiv: HTMLDivElement = document.getElementById("selection") as HTMLDivElement;
 
 let mapItems: Array<MapItemArray> = [];
 let selectedItems: Array<MapItem> = [];
@@ -34,6 +35,7 @@ export {
   map,
   items,
   autoCheckbox,
+  selectionDiv,
   mapItems,
   selectedItems,
   selectedImgItem,
