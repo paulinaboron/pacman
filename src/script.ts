@@ -2,12 +2,16 @@ import { createMap, createImgItems } from "./start";
 
 import {
   map,
+  mapItems,
   selectedItems,
   autoCheckbox,
   setCtrlPressed,
   setAutomat,
   setSelectedItems,
   selectionDiv,
+  selectionStart,
+  selectionEnd,
+  updateSelection,
 } from "./global";
 
 autoCheckbox.onchange = function () {
@@ -46,65 +50,80 @@ document.onkeyup = function (e) {
   }
 };
 
-let startX = 0
-let startY = 0
-let mouseDown = false
+let startX = 0;
+let startY = 0;
+let mouseDown = false;
 
-document.onmousedown = function (e) {
-  console.log("downnnn");
-  
-  e.preventDefault()
+map.addEventListener("mousedown", function (e) {
+  console.log("downnnncdddd");
+
+  e.preventDefault();
   if (e.button == 2) {
-    showMenu()
+    showMenu();
   } else {
-    if (document.getElementById("menu-container").style.display == "block")
-      hideMenu()
-    else {
-      mouseDown = true
-      selectionDiv.style.display = "block"
-      selectionDiv.style.top = e.clientY + "px"
-      selectionDiv.style.left = e.clientX + "px"
-      startX = e.clientX
-      startY = e.clientY
+    mouseDown = true;
+    selectionDiv.style.display = "block";
+    selectionDiv.style.top = e.clientY + "px";
+    selectionDiv.style.left = e.clientX + "px";
+    startX = e.clientX;
+    startY = e.clientY;
+  }
+});
+
+document
+  .getElementById("menu-container")
+  .addEventListener("mousedown", function (e) {
+    hideMenu();
+  });
+
+// document.addEventListener("mousemove", (e)=> {
+//   if (mouseDown) {
+//     selectionDiv.style.width = Math.abs(startX - e.clientX) + "px";
+//     selectionDiv.style.height = Math.abs(startY - e.clientY) + "px";
+//   }
+// });
+
+document.addEventListener("mouseup", (e) => {
+  console.log("upp");
+
+  mouseDown = false;
+  selectionDiv.style.width = "0px";
+  selectionDiv.style.height = "0px";
+  selectionDiv.style.display = "none";
+
+  if (selectionEnd != null) {
+    for (let i = selectionStart.x; i <= selectionEnd.x; i++) {
+      for (let j = selectionStart.y; j <= selectionEnd.y; j++) {
+        selectedItems.push(mapItems[i][j]);
+      }
     }
   }
-}
-
-document.onmousemove = function (e) {
-  if (mouseDown) {
-    selectionDiv.style.width = Math.abs(startX - e.clientX) + "px"
-    selectionDiv.style.height = Math.abs(startY - e.clientY) + "px"
-  }
-}
-
-document.onmouseup = function (e) {
-  mouseDown = false
-  selectionDiv.style.width = "0px"
-  selectionDiv.style.height = "0px"
-  selectionDiv.style.display = "none"
-}
+  updateSelection();
+});
 
 function showMenu() {
-  document.getElementById("menu-container").style.display = "block"
+  document.getElementById("menu-container").style.display = "block";
 }
 
 function hideMenu() {
-  document.getElementById("menu-container").style.display = "none"
+  document.getElementById("menu-container").style.display = "none";
 }
 
 function deletePressed() {
   console.log("ddd");
 
   selectedItems.forEach((e) => {
-    e.canvas.style.borderColor = "white";
     e.context.clearRect(0, 0, 25, 25);
   });
   setSelectedItems([]);
+  updateSelection();
 }
 
-// document.getElementById("delete").onclick = function(){
-//   deletePressed()
-// }
+document.getElementById("delete").addEventListener("mousedown", function () {
+  console.log("dddddddd");
+
+  deletePressed();
+});
 
 createMap();
 createImgItems();

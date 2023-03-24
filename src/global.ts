@@ -15,6 +15,9 @@ let selectedImgItem = new ImgItem();
 let automat: boolean = autoCheckbox.checked;
 let ctrlPressed: boolean = false;
 
+let selectionStart: MapItem = null
+let selectionEnd: MapItem = null
+
 function setCtrlPressed(b: boolean) {
   ctrlPressed = b;
 }
@@ -31,6 +34,26 @@ function setSelectedImgItem(i: ImgItem) {
   selectedImgItem = i;
 }
 
+function setSelectionStart(i: MapItem) {
+  selectionStart = i;
+}
+
+function setSelectionEnd(i: MapItem) {
+  selectionEnd = i;
+}
+
+function updateSelection(){
+  mapItems.forEach(e=>{
+    for(let i = 0; i<30; i++){
+      e[i].canvas.style.borderColor = "white"
+    }
+  })
+
+  selectedItems.forEach(e=>{
+    e.canvas.style.borderColor = "red"
+  })
+}
+
 export {
   map,
   items,
@@ -41,8 +64,13 @@ export {
   selectedImgItem,
   automat,
   ctrlPressed,
+  selectionStart,
+  selectionEnd,
   setCtrlPressed,
   setAutomat,
   setSelectedItems,
   setSelectedImgItem,
+  setSelectionStart,
+  setSelectionEnd,
+  updateSelection
 };

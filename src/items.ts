@@ -1,5 +1,5 @@
 import {Square, SquareMap} from "./interfaces"
-import {selectedItems, ctrlPressed, setSelectedItems, automat, mapItems, setSelectedImgItem} from "./global"
+import {selectedItems, ctrlPressed, setSelectedItems, automat, mapItems, setSelectedImgItem, setSelectionStart, setSelectionEnd, updateSelection} from "./global"
 
 export class MapItem implements SquareMap {
     public canvas: HTMLCanvasElement;
@@ -14,38 +14,41 @@ export class MapItem implements SquareMap {
       this.canvas.width = 25;
       this.canvas.height = 25;
       this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
-      this.canvas.addEventListener("mousedown", () => this.click(this.canvas));
+      this.canvas.addEventListener("mousedown", (e) => this.click(this.canvas, e));
       this.canvas.addEventListener("mouseup", ()=>this.unClick(this.canvas));
     }
   
-    click(canvas: HTMLCanvasElement): void {
-      if (selectedItems.length > 0 && ctrlPressed == false) {
-        selectedItems.forEach((e) => {
-          e.canvas.style.borderColor = "white";
-        });
+    click(canvas: HTMLCanvasElement, e: MouseEvent): void {
+      console.log(selectedItems, e.button);
+      if(e.button == 2){
+        return
       }
-      if (ctrlPressed) {
+      setSelectionStart(this)
+      setSelectionEnd(null)
+      
+      if (!ctrlPressed) {
+        setSelectedItems([this])
+      }
+      else{
         if (this.canvas.style.borderColor == "red") {
           let temp = selectedItems.filter((obj) => {
             return obj !== this;
           });
           setSelectedItems(temp)
-          this.canvas.style.borderColor = "white";
         } else {
           selectedItems.push(this);
-          canvas.style.borderColor = "red";
         }
-      } else {
-        selectedItems[0] = this;
-        canvas.style.borderColor = "red";
       }
       console.log(this.x, this.y, ctrlPressed);
+
+      updateSelection()
     }
 
     unClick(canvas: HTMLCanvasElement): void{
-      canvas.style.borderColor = "red"
       console.log("unclick");
-      
+      selectedItems.push(this)
+      setSelectionEnd(this)
+      updateSelection()
     }
   
     setBgImage(img: ImageData): void {
@@ -76,11 +79,12 @@ export class MapItem implements SquareMap {
     click(): void {
       setSelectedImgItem(this)
       selectedItems.forEach((e) => {
-        e.canvas.style.borderColor = "white";
         e.setBgImage(this.context.getImageData(0, 0, 25, 25));
       });
   
       if (automat) {
+        console.log(automat);
+        
         let x = selectedItems[selectedItems.length - 1].x;
         let y = selectedItems[selectedItems.length - 1].y;
         let selected: MapItem;
@@ -90,9 +94,10 @@ export class MapItem implements SquareMap {
           selected = mapItems[x][y + 1];
         }
         setSelectedItems([selected])
-        selected.canvas.style.borderColor = "red";
       } else {
         setSelectedItems([])
       }
+
+      updateSelection()
     }
   }
