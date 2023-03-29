@@ -63,10 +63,10 @@ map.addEventListener("mousedown", function (e) {
   } else {
     mouseDown = true;
     selectionDiv.style.display = "block";
-    selectionDiv.style.top = e.clientY + "px";
+    selectionDiv.style.top = e.pageY + "px";
     selectionDiv.style.left = e.clientX + "px";
     startX = e.clientX;
-    startY = e.clientY;
+    startY = e.pageY;
   }
 });
 
@@ -76,12 +76,12 @@ document
     hideMenu();
   });
 
-// document.addEventListener("mousemove", (e)=> {
-//   if (mouseDown) {
-//     selectionDiv.style.width = Math.abs(startX - e.clientX) + "px";
-//     selectionDiv.style.height = Math.abs(startY - e.clientY) + "px";
-//   }
-// });
+document.addEventListener("mousemove", (e)=> {
+  if (mouseDown) {
+    selectionDiv.style.width = Math.abs(startX - e.clientX) -3 + "px";
+    selectionDiv.style.height = Math.abs(startY - e.pageY) -3 + "px";
+  }
+});
 
 document.addEventListener("mouseup", (e) => {
   console.log("upp");
