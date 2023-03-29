@@ -21,15 +21,18 @@
 
     <div id="menu-container">
         <div id="menu">
-            <p>Undo</p>
+            <p id="undo">Undo</p>
             <p>Redo</p>
             <p>Copy</p>
             <p>Paste</p>
             <p id="delete">Delete</p>
             <p id="save">Save to file</p>
+            <p><input (change)="uploadFile($event)" type="file" value="load" accept="application/json"></p>
         </div>
     </div>
 
     <div id="selection"></div>
+
+    <input (change)="uploadFile($event)" type="file" value="load" accept="application/json">
 </body>
 </html>

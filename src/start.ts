@@ -1,5 +1,6 @@
 import * as global from "./global"
 import { MapItem, ImgItem } from "./items";
+import type { MapItemArray } from "./interfaces";
 
 export function createMap() {
   for (let i = 0; i < 20; i++) {
@@ -10,6 +11,20 @@ export function createMap() {
       row.push(mapItem);
     }
     global.mapItems.push(row);
+  }
+}
+
+export function updateMap(array: Array<MapItemArray>){
+  console.log("update", array);
+  
+  global.map.innerHTML = ""
+
+  for (let i = 0; i < 20; i++) {
+    let row: MapItemArray = array[i];
+    for (let j = 0; j < 30; j++) {
+      let mapItem = row[j];
+      global.map.appendChild(mapItem.canvas);
+    }
   }
 }
 

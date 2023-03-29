@@ -1,11 +1,12 @@
-import {Square, SquareMap} from "./interfaces"
-import {selectedItems, ctrlPressed, setSelectedItems, automat, mapItems, setSelectedImgItem, setSelectionStart, setSelectionEnd, updateSelection} from "./global"
+import {MapItemArray, Square, SquareMap} from "./interfaces"
+import {selectedItems, ctrlPressed, setSelectedItems, automat, mapItems, setSelectedImgItem, setSelectionStart, setSelectionEnd, updateSelection, previousMapItems, setPreviousMapItems} from "./global"
 
 export class MapItem implements SquareMap {
     public canvas: HTMLCanvasElement;
     public context: CanvasRenderingContext2D;
     public x: number;
     public y: number;
+    public img: ImageData = null
   
     constructor(x: number, y: number) {
       this.x = x;
@@ -52,6 +53,7 @@ export class MapItem implements SquareMap {
     }
   
     setBgImage(img: ImageData): void {
+      this.img = img
       this.context.putImageData(img, 0, 0);
     }
   }
@@ -77,6 +79,15 @@ export class MapItem implements SquareMap {
     }
   
     click(): void {
+      let prevMapItems: Array<MapItemArray> = []
+      
+      for (let i = 0; i < 20; i++) {
+        let row: MapItemArray = mapItems[i];
+        prevMapItems.push(row)
+      }
+
+      setPreviousMapItems(prevMapItems)
+
       setSelectedImgItem(this)
       selectedItems.forEach((e) => {
         e.setBgImage(this.context.getImageData(0, 0, 25, 25));
