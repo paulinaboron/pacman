@@ -75,8 +75,34 @@ map.addEventListener("mousedown", function (e) {
 document
   .getElementById("menu-container")
   .addEventListener("mousedown", function (e) {
-    console.log('hide');
-    hideMenu();
+    let target: HTMLElement = e.target as HTMLElement;
+    console.log("hide", e.target, target.id);
+
+    switch (target.id) {
+      case "menu-container":
+        hideMenu();
+        break;
+      case "selectFile":
+        console.log("load");
+
+        const element = e.currentTarget as HTMLInputElement;
+        let fileList: FileList | null = element.files;
+        if (fileList) {
+          console.log("FileUpload -> files", fileList[0]);
+        }
+      case "undo":
+        undo();
+        break;
+      case "delete":
+        deletePressed();
+        break;
+      case "save":
+        let data = JSON.stringify(mapItems);
+        save(data, "data.json", "application/json");
+        break;
+      default:
+        break;
+    }
   });
 
 document.addEventListener("mousemove", (e) => {
@@ -117,7 +143,7 @@ function deletePressed() {
 
   selectedItems.forEach((e) => {
     e.context.clearRect(0, 0, 25, 25);
-    e.img = null
+    e.img = null;
   });
   setSelectedItems([]);
   updateSelection();
@@ -127,11 +153,10 @@ function undo() {
   console.log("undoo");
 
   // setMapItems(previousMapItems)
-  updateMap(previousMapItems)
-
+  updateMap(previousMapItems);
 }
 
-function save(data: string, filename: string, type: string) {
+function save(data: string, filename: string, type: string){
   const blob = new Blob([data], { type: type });
   console.log(blob);
 
@@ -146,34 +171,8 @@ function save(data: string, filename: string, type: string) {
   document.body.appendChild(link);
   setTimeout(() => {
     URL.revokeObjectURL(url);
-  }, 0)
+  }, 0);
 }
-
-function uploadFile(event: Event) {
-  console.log("load");
-
-  const element = event.currentTarget as HTMLInputElement;
-  let fileList: FileList | null = element.files;
-  if (fileList) {
-    console.log("FileUpload -> files", fileList);
-  }
-
-}
-
-
-
-document.getElementById("delete").addEventListener("mousedown", function () {
-  deletePressed();
-});
-
-document.getElementById("undo").addEventListener("mousedown", function () {
-  undo()
-})
-
-document.getElementById("save").addEventListener("mousedown", function () {
-  let data = JSON.stringify(mapItems);
-  save(data, "data.json", "application/json")
-})
 
 createMap();
 createImgItems();
