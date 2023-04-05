@@ -1,6 +1,5 @@
 import * as global from "./global"
 import { MapItem, ImgItem } from "./items";
-import type { MapItemArray } from "./interfaces";
 
 export function createMap() {
   for (let i = 0; i < 20; i++) {
@@ -14,28 +13,24 @@ export function createMap() {
   }
 }
 
-export function updateMap(array: Array<Uint8ClampedArray>){
+export function updateMap(array: Array<Array<Uint8ClampedArray>>){
   console.log("update", array);
   
   global.map.innerHTML = ""
 
-  for (let i = 0; i < 600; i++) {
-    let row: Uint8ClampedArray = array[i];
-      let mapItem = new MapItem(i, 1);
-
-      if(row != null){
-         var idata = mapItem.context.createImageData(25, 25);
-     for(var j = 0; j < idata.data.length; j++) idata.data[j] = row[i];
-      console.log(row);
-
-
-
-      mapItem.img = idata
-      mapItem.context.putImageData(idata, 0, 0)
+  array.forEach((e, i) => {
+    e.forEach((f, j) => {
+      let mapItem = new MapItem(i, j);
+      if(f != null){
+        let idata = mapItem.context.createImageData(25, 25);
+        for(var k = 0; k < idata.data.length; k++) idata.data[k] = f[k];
+        mapItem.img = idata
+        mapItem.context.putImageData(idata, 0, 0)
       }
-     
       global.map.appendChild(mapItem.canvas);
-  }
+    })
+  })
+
 }
 
 export function createImgItems() {

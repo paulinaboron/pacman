@@ -113,16 +113,6 @@ export class MapItem implements SquareMap {
         setSelectedItems([])
       }
 
-      updateSelection()
-
-      // console.log(mapItems);
-      let imgDataArray = [] as Array<ImageData>
-      mapItems.forEach(e=>{
-        for(let i = 0; i<30; i++){
-          imgDataArray.push(e[i].img)
-        }
-      })
-      console.log(imgDataArray);
-      
+      updateSelection()     
     }
   }

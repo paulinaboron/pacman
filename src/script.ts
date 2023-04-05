@@ -16,7 +16,6 @@ import {
   setMapItems,
 } from "./global";
 
-import type { MapItemArray } from "./interfaces";
 
 autoCheckbox.onchange = function () {
   setAutomat(autoCheckbox.checked);
@@ -83,11 +82,12 @@ document.getElementById("selectFile").onchange = async function (e) {
   let file: File | null = fileList?.item(0);
   console.log(fileList);
   let text = await file.text();
-  let json: Array<Uint8ClampedArray> = JSON.parse(text) as Array<Uint8ClampedArray>;
+  let json: Array<Array<Uint8ClampedArray>> = JSON.parse(text) as Array<Array<Uint8ClampedArray>>;
   console.log(json);
   console.log(mapItems);
 
   updateMap(json);
+  hideMenu()
 }
 
 document
@@ -102,17 +102,29 @@ document
         break;
       case "undo":
         undo();
+        hideMenu();
+        break;
+      case "redo":
+        hideMenu();
+        break;
+      case "copy":
+        hideMenu();
+        break;
+      case "paste":
+        hideMenu();
         break;
       case "delete":
         deletePressed();
+        hideMenu();
         break;
       case "save":
-        let data = JSON.stringify(mapItems);
-        save(data, "data.json", "application/json");
+        save("data.json", "application/json");
+        hideMenu();
         break;
       default:
         break;
     }
+
   });
 
 document.addEventListener("mousemove", (e) => {
@@ -163,17 +175,20 @@ function undo() {
   console.log("undoo");
 }
 
-function save(data: string, filename: string, type: string) {
-  let imgDataArray = [] as Array<Uint8ClampedArray>
-      mapItems.forEach(e=>{
-        for(let i = 0; i<30; i++){
-          if(e[i].img == null) imgDataArray.push(null)
-          else imgDataArray.push(e[i].img.data)
-        }
-      })
-      console.log(imgDataArray);
-      let data1 = JSON.stringify(imgDataArray)
-  const blob = new Blob([data1], { type: type });
+function save(filename: string, type: string) {
+  let imgDataArray = [] as Array<Array<Uint8ClampedArray>>
+
+  mapItems.forEach(e => {
+    let array = [] as Array<Uint8ClampedArray>
+    for (let i = 0; i < 30; i++) {
+      if (e[i].img == null) array.push(null)
+      else array.push(e[i].img.data)
+    }
+    imgDataArray.push(array)
+  })
+  console.log(imgDataArray);
+  let data = JSON.stringify(imgDataArray)
+  const blob = new Blob([data], { type: type });
   console.log(blob);
 
   const url = URL.createObjectURL(blob);
