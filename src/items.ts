@@ -20,7 +20,11 @@ export class MapItem implements SquareMap {
     }
   
     click(canvas: HTMLCanvasElement, e: MouseEvent): void {
+      console.log(mapItems);
+      
       console.log(selectedItems, e.button);
+      console.log(this.canvas);
+      
       if(e.button == 2){
         return
       }
@@ -110,5 +114,15 @@ export class MapItem implements SquareMap {
       }
 
       updateSelection()
+
+      // console.log(mapItems);
+      let imgDataArray = [] as Array<ImageData>
+      mapItems.forEach(e=>{
+        for(let i = 0; i<30; i++){
+          imgDataArray.push(e[i].img)
+        }
+      })
+      console.log(imgDataArray);
+      
     }
   }

@@ -16,6 +16,8 @@ import {
   setMapItems,
 } from "./global";
 
+import type { MapItemArray } from "./interfaces";
+
 autoCheckbox.onchange = function () {
   setAutomat(autoCheckbox.checked);
 };
@@ -72,6 +74,22 @@ map.addEventListener("mousedown", function (e) {
   }
 });
 
+
+document.getElementById("selectFile").onchange = async function (e) {
+  hideMenu()
+  console.log("load ddddddd");
+  console.log(e, e.target);
+  let fileList: FileList | null = (e.target as HTMLInputElement).files;
+  let file: File | null = fileList?.item(0);
+  console.log(fileList);
+  let text = await file.text();
+  let json: Array<Uint8ClampedArray> = JSON.parse(text) as Array<Uint8ClampedArray>;
+  console.log(json);
+  console.log(mapItems);
+
+  updateMap(json);
+}
+
 document
   .getElementById("menu-container")
   .addEventListener("mousedown", function (e) {
@@ -82,14 +100,6 @@ document
       case "menu-container":
         hideMenu();
         break;
-      case "selectFile":
-        console.log("load");
-
-        const element = e.currentTarget as HTMLInputElement;
-        let fileList: FileList | null = element.files;
-        if (fileList) {
-          console.log("FileUpload -> files", fileList[0]);
-        }
       case "undo":
         undo();
         break;
@@ -151,13 +161,19 @@ function deletePressed() {
 
 function undo() {
   console.log("undoo");
-
-  // setMapItems(previousMapItems)
-  updateMap(previousMapItems);
 }
 
-function save(data: string, filename: string, type: string){
-  const blob = new Blob([data], { type: type });
+function save(data: string, filename: string, type: string) {
+  let imgDataArray = [] as Array<Uint8ClampedArray>
+      mapItems.forEach(e=>{
+        for(let i = 0; i<30; i++){
+          if(e[i].img == null) imgDataArray.push(null)
+          else imgDataArray.push(e[i].img.data)
+        }
+      })
+      console.log(imgDataArray);
+      let data1 = JSON.stringify(imgDataArray)
+  const blob = new Blob([data1], { type: type });
   console.log(blob);
 
   const url = URL.createObjectURL(blob);
@@ -165,14 +181,16 @@ function save(data: string, filename: string, type: string){
 
   const link = document.createElement("a");
   link.innerText = "save";
-  link.href = url;
   link.download = filename;
 
-  document.body.appendChild(link);
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-  }, 0);
+  let reader = new FileReader();
+  reader.readAsDataURL(blob);
+  reader.onload = function () {
+    link.href = reader.result as string;
+    link.click();
+  };
 }
 
 createMap();
 createImgItems();
+
