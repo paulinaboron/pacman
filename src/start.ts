@@ -13,6 +13,9 @@ export function createMap() {
   }
 }
 
+/**
+ * @param array - array that contains the image data of every map item
+ */
 export function updateMap(array: Array<Array<Uint8ClampedArray>>){
   console.log("update", array);
   
@@ -30,7 +33,6 @@ export function updateMap(array: Array<Array<Uint8ClampedArray>>){
       global.map.appendChild(mapItem.canvas);
     })
   })
-
 }
 
 export function createImgItems() {

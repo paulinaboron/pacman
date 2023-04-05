@@ -105,12 +105,15 @@ document
         hideMenu();
         break;
       case "redo":
+        /** @todo */
         hideMenu();
         break;
       case "copy":
+        /** @todo */
         hideMenu();
         break;
       case "paste":
+        /** @todo */
         hideMenu();
         break;
       case "delete":
@@ -172,9 +175,14 @@ function deletePressed() {
 }
 
 function undo() {
+  /** @todo */
   console.log("undoo");
 }
 
+/**
+ * @param filename - name of the saved file
+ * @param type - mime type
+ */
 function save(filename: string, type: string) {
   let imgDataArray = [] as Array<Array<Uint8ClampedArray>>
 
